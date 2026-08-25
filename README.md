@@ -1,9 +1,16 @@
 # 🖱️ WIN.right.CLICK
 
-**A simple app to add, edit, and remove entries in your Windows right-click menu — no registry editor needed.**
+## 📥 Install: download → run
 
-> 📥 **Quick start:** download the zip from [Releases](https://github.com/dobrdigital/win-right-click/releases),
-> unzip it, and run `WIN.right.CLICK.exe`. That's the whole install — no setup wizard, nothing else to do.
+1. **[Download the zip](https://github.com/dobrdigital/win-right-click/releases/latest)**
+2. **Unzip it**
+3. **Double-click `WIN.right.CLICK.exe`**
+
+That's it — no installer, no setup wizard.
+
+---
+
+**A simple app to add, edit, and remove entries in your Windows right-click menu — no registry editor needed.**
 
 Windows gives you no real way to edit the right-click menu yourself. The only
 option is `regedit` — digging through several different, obscurely-named
@@ -155,11 +162,17 @@ only for rendering an optional logo). Nothing else.
 
 # 🖱️ WIN.right.CLICK
 
-**Простая программа для добавления, редактирования и удаления пунктов меню правого клика — без редактора реестра.**
+## 📥 Установка: скачать → запустить
 
-> 📥 **Быстрый старт:** скачайте zip со страницы
-> [Releases](https://github.com/dobrdigital/win-right-click/releases), распакуйте и запустите
-> `WIN.right.CLICK.exe`. Это весь «установочный процесс» — больше ничего делать не нужно.
+1. **[Скачать zip](https://github.com/dobrdigital/win-right-click/releases/latest)**
+2. **Распаковать**
+3. **Запустить `WIN.right.CLICK.exe`**
+
+Всё — установщик не нужен.
+
+---
+
+**Простая программа для добавления, редактирования и удаления пунктов меню правого клика — без редактора реестра.**
 
 Windows не даёт нормального способа отредактировать меню правого клика самому.
 Единственный вариант — `regedit`: копаться по нескольким малопонятно
