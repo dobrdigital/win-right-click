@@ -1,19 +1,22 @@
 # 🖱️ WIN.right.CLICK
 
-**The right-click menu editor Windows should have shipped with.**
+**A simple app to add, edit, and remove entries in your Windows right-click menu — no registry editor needed.**
 
-Ever tried to clean up your Windows right-click menu? The only "official" way is
-`regedit` — hunting across five different registry roots, guessing which GUID
-is "Give access to" and which is your antivirus, and hoping you don't break
-something you can't even name. Half the entries aren't even yours: some
-installer wrote them straight into `HKEY_LOCAL_MACHINE`, and Windows won't let
-you touch them without admin rights.
+> 📥 **Quick start:** download the zip from [Releases](https://github.com/dobrdigital/win-right-click/releases),
+> unzip it, and run `WIN.right.CLICK.exe`. That's the whole install — no setup wizard, nothing else to do.
 
-**WIN.right.CLICK** is a single dark-themed GUI for the Desktop, Folder, File,
-Send To, and shell-extension menus — it shows **every real entry** (yours,
-someone else's, Windows' own), decodes the ones with unreadable names, and can
-edit or delete even the "locked" ones with one UAC prompt per session instead
-of one per click.
+Windows gives you no real way to edit the right-click menu yourself. The only
+option is `regedit` — digging through several different, obscurely-named
+registry locations, guessing what each cryptic entry actually does, and hoping
+you don't break something in the process. Some entries can't even be
+changed without administrator rights, because a program's installer put them
+somewhere only admins can touch.
+
+**WIN.right.CLICK** replaces all of that with one simple window. It shows
+every right-click menu on your PC — desktop, folders, files, "Send to", and
+extensions like 7-Zip — in one place, in plain language instead of cryptic
+codes. You can add your own entries, edit or remove anyone's, and even the
+"locked" (admin-only) ones unlock with a single permission prompt.
 
 ![Windows 8+](https://img.shields.io/badge/Windows-8%2B-0078D6)
 ![.NET Framework 4.8](https://img.shields.io/badge/.NET%20Framework-4.8-512BD4)
@@ -152,20 +155,25 @@ only for rendering an optional logo). Nothing else.
 
 # 🖱️ WIN.right.CLICK
 
-**Редактор контекстного меню, который Windows должна была дать из коробки.**
+**Простая программа для добавления, редактирования и удаления пунктов меню правого клика — без редактора реестра.**
 
-Пытались когда-нибудь навести порядок в меню правого клика? «Официальный»
-способ один — `regedit`: искать по пяти разным веткам реестра, гадать, какой
-GUID — это «Предоставить доступ», а какой — антивирус, и надеяться не
-сломать то, что даже не можешь опознать. Половина пунктов — не ваши: какой-то
-инсталлятор записал их прямо в `HKEY_LOCAL_MACHINE`, и без прав администратора
-их не тронуть.
+> 📥 **Быстрый старт:** скачайте zip со страницы
+> [Releases](https://github.com/dobrdigital/win-right-click/releases), распакуйте и запустите
+> `WIN.right.CLICK.exe`. Это весь «установочный процесс» — больше ничего делать не нужно.
 
-**WIN.right.CLICK** — единое тёмное GUI-приложение для меню рабочего стола,
-папок, файлов, «Отправить» и COM-расширений. Показывает **все реальные
-пункты** (свои, чужие, системные), расшифровывает нечитаемые названия и умеет
-редактировать и удалять даже «заблокированные» пункты — один запрос UAC на
-всю сессию, а не на каждый клик.
+Windows не даёт нормального способа отредактировать меню правого клика самому.
+Единственный вариант — `regedit`: копаться по нескольким малопонятно
+названным веткам реестра, гадать, что на самом деле делает тот или иной
+пункт, и надеяться ничего не сломать. Некоторые пункты вообще нельзя
+изменить без прав администратора — их записал туда установщик какой-то
+программы.
+
+**WIN.right.CLICK** заменяет всё это одним простым окном. Оно показывает все
+меню правого клика на компьютере — рабочий стол, папки, файлы, «Отправить» и
+расширения вроде 7-Zip — в одном месте и понятным языком, а не набором кодов.
+Можно добавлять свои пункты, редактировать или удалять чужие, а
+«заблокированные» (только для администратора) пункты разблокируются одним
+запросом прав.
 
 ## Что внутри
 
