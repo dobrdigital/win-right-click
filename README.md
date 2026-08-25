@@ -46,21 +46,11 @@ codes. You can add your own entries, edit or remove anyone's, and even the
 
 ## 🖥️ What it looks like
 
-```
-WIN.right.CLICK 0.99 beta
-────────────────────────────────────────────────────────────────
- [ Рабочий стол ] [ Папки ] [ Файлы ] [ Отправить ] [ Расширения ]
+![WIN.right.CLICK — Desktop tab, dark theme, live table with per-row actions and a preview panel](docs/screenshot.png)
 
-  Название             Программа / путь                Тип        ⋯  ?
-  ────────────────────────────────────────────────────────────────
-  Tabby                C:\...\Tabby.exe                 Ваш        ⋯  ?
-  Open PowerShell here powershell.exe                🔒 Общий(HKLM) ⋯  ?
-  7-Zip                (COM shell extension)              —           ?
-
-  [Добавить...] [Изменить] [Удалить] [Обновить] [Экспорт...] [Импорт...]
-```
-
-Every tab is a live, editable table — not a static viewer.
+Every tab is a live, editable table — not a static viewer. The `⋯`/`?` columns
+on the right are per-row buttons (open containing folder / search online),
+and the panel on the far right is a live preview of the actual right-click menu.
 
 ## 🧭 The 5 tabs
 
