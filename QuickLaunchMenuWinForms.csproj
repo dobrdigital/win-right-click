@@ -8,6 +8,7 @@
     <Nullable>enable</Nullable>
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AssemblyName>WIN.right.CLICK</AssemblyName>
     <AssemblyTitle>WIN.right.CLICK</AssemblyTitle>
     <Product>WIN.right.CLICK</Product>
     <Version>0.99.0</Version>
