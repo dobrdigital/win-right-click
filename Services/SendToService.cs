@@ -52,7 +52,7 @@ namespace QuickLaunchMenuWinForms.Services
                     {
                         KeyName = fileName,
                         DisplayName = name,
-                        TargetPath = $"(системный пункт Windows — файл {ext})",
+                        TargetPath = Localization.T($"(системный пункт Windows — файл {ext})", $"(built-in Windows entry — {ext} file)"),
                         Arguments = string.Empty,
                         IconPath = string.Empty,
                         IsSpecial = true
@@ -138,7 +138,7 @@ namespace QuickLaunchMenuWinForms.Services
         private static void WriteShortcut(string path, string targetPath, string arguments, string? iconPath)
         {
             var shellType = Type.GetTypeFromProgID("WScript.Shell");
-            if (shellType == null) throw new InvalidOperationException("WScript.Shell недоступен в этой системе.");
+            if (shellType == null) throw new InvalidOperationException(Localization.T("WScript.Shell недоступен в этой системе.", "WScript.Shell is not available on this system."));
 
             dynamic shell = Activator.CreateInstance(shellType)!;
             dynamic sc = shell.CreateShortcut(path);

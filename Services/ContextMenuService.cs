@@ -32,22 +32,22 @@ namespace QuickLaunchMenuWinForms.Services
         /// we could otherwise show. For Microsoft's own well-known, stable system components, map the
         /// handler's registry key name to the label users actually recognize from the real menu.
         /// </summary>
-        private static readonly Dictionary<string, string> KnownHandlerNames = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        private static Dictionary<string, string> KnownHandlerNames => new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
-            ["Sharing"] = "🔷 Предоставить доступ (Give access to)",
-            ["ModernSharing"] = "🔷 Предоставить доступ (Give access to, новое меню)",
-            ["Library Location"] = "🔷 Добавить в библиотеку (Include in library)",
-            ["EncryptionMenu"] = "🔷 Шифрование EFS (Encrypt/Decrypt)",
-            ["CopyAsPathMenu"] = "🔷 Копировать как путь (Copy as path)",
-            ["CopyToFolder"] = "🔷 Копировать в папку (Copy to folder)",
-            ["MoveToFolder"] = "🔷 Переместить в папку (Move to folder)",
-            ["SendTo"] = "🔷 Построение меню «Отправить» (системное)",
-            ["Offline Files"] = "🔷 Всегда доступно офлайн / Синхронизация",
-            ["WorkFolders"] = "🔷 Рабочие папки (Work Folders)",
-            ["PintoStartScreen"] = "🔷 Закрепить на начальном экране (Pin to Start)",
-            ["{a2a9545d-a0c2-42b4-9708-a0b2badd77c8}"] = "🔷 Закрепить на начальном экране (Pin to Start)",
-            ["{596ab062-b4d2-4215-9f74-e9109b0a8153}"] = "🔷 Восстановить предыдущие версии (Restore previous versions)",
-            ["{450d8fba-ad25-11d0-98a8-0800361b1103}"] = "🔷 Добавить в архив / Свойства архивации",
+            ["Sharing"] = Localization.T("🔷 Предоставить доступ (Give access to)", "🔷 Give access to"),
+            ["ModernSharing"] = Localization.T("🔷 Предоставить доступ (Give access to, новое меню)", "🔷 Give access to (new menu)"),
+            ["Library Location"] = Localization.T("🔷 Добавить в библиотеку (Include in library)", "🔷 Include in library"),
+            ["EncryptionMenu"] = Localization.T("🔷 Шифрование EFS (Encrypt/Decrypt)", "🔷 EFS encryption (Encrypt/Decrypt)"),
+            ["CopyAsPathMenu"] = Localization.T("🔷 Копировать как путь (Copy as path)", "🔷 Copy as path"),
+            ["CopyToFolder"] = Localization.T("🔷 Копировать в папку (Copy to folder)", "🔷 Copy to folder"),
+            ["MoveToFolder"] = Localization.T("🔷 Переместить в папку (Move to folder)", "🔷 Move to folder"),
+            ["SendTo"] = Localization.T("🔷 Построение меню «Отправить» (системное)", "🔷 \"Send To\" menu builder (built-in)"),
+            ["Offline Files"] = Localization.T("🔷 Всегда доступно офлайн / Синхронизация", "🔷 Always available offline / Sync"),
+            ["WorkFolders"] = Localization.T("🔷 Рабочие папки (Work Folders)", "🔷 Work Folders"),
+            ["PintoStartScreen"] = Localization.T("🔷 Закрепить на начальном экране (Pin to Start)", "🔷 Pin to Start"),
+            ["{a2a9545d-a0c2-42b4-9708-a0b2badd77c8}"] = Localization.T("🔷 Закрепить на начальном экране (Pin to Start)", "🔷 Pin to Start"),
+            ["{596ab062-b4d2-4215-9f74-e9109b0a8153}"] = Localization.T("🔷 Восстановить предыдущие версии (Restore previous versions)", "🔷 Restore previous versions"),
+            ["{450d8fba-ad25-11d0-98a8-0800361b1103}"] = Localization.T("🔷 Добавить в архив / Свойства архивации", "🔷 Add to archive / Archive properties"),
         };
 
         private readonly MenuScope _scope;
@@ -63,34 +63,34 @@ namespace QuickLaunchMenuWinForms.Services
             {
                 case MenuScope.Folder:
                     _writeRootPath = FolderRootSubKey;
-                    _readRoots = new[] { (FolderRootSubKey, "Папки") };
+                    _readRoots = new[] { (FolderRootSubKey, Localization.T("Папки", "Folders")) };
                     _shellexClassRoots = new[]
                     {
-                        (@"Software\Classes\Directory", "Папки"),
-                        (@"Software\Classes\Folder", "Папки (тип Folder)"),
-                        (@"Software\Classes\AllFilesystemObjects", "Файлы и папки вместе"),
+                        (@"Software\Classes\Directory", Localization.T("Папки", "Folders")),
+                        (@"Software\Classes\Folder", Localization.T("Папки (тип Folder)", "Folders (Folder type)")),
+                        (@"Software\Classes\AllFilesystemObjects", Localization.T("Файлы и папки вместе", "Files and folders together")),
                     };
                     break;
                 case MenuScope.File:
                     _writeRootPath = FileRootSubKey;
-                    _readRoots = new[] { (FileRootSubKey, "Любые файлы") };
+                    _readRoots = new[] { (FileRootSubKey, Localization.T("Любые файлы", "Any file")) };
                     _shellexClassRoots = new[]
                     {
-                        (@"Software\Classes\*", "Любые файлы"),
-                        (@"Software\Classes\AllFilesystemObjects", "Файлы и папки вместе"),
+                        (@"Software\Classes\*", Localization.T("Любые файлы", "Any file")),
+                        (@"Software\Classes\AllFilesystemObjects", Localization.T("Файлы и папки вместе", "Files and folders together")),
                     };
                     break;
                 default:
                     _writeRootPath = DesktopRootSubKey;
                     _readRoots = new[]
                     {
-                        (DesktopRootSubKey, "Рабочий стол"),
-                        (FolderBackgroundRootSubKey, "Везде — папки и рабочий стол"),
+                        (DesktopRootSubKey, Localization.T("Рабочий стол", "Desktop")),
+                        (FolderBackgroundRootSubKey, Localization.T("Везде — папки и рабочий стол", "Everywhere — folders and desktop")),
                     };
                     _shellexClassRoots = new[]
                     {
-                        (@"Software\Classes\DesktopBackground", "Рабочий стол"),
-                        (@"Software\Classes\Directory\Background", "Везде — папки и рабочий стол"),
+                        (@"Software\Classes\DesktopBackground", Localization.T("Рабочий стол", "Desktop")),
+                        (@"Software\Classes\Directory\Background", Localization.T("Везде — папки и рабочий стол", "Everywhere — folders and desktop")),
                     };
                     break;
             }
@@ -270,7 +270,7 @@ namespace QuickLaunchMenuWinForms.Services
             var hive = extension.IsHklm ? Registry.LocalMachine : Registry.CurrentUser;
             using (var key = hive.OpenSubKey(@"Software\Classes\" + extension.HandlerSubPath, writable: true))
             {
-                if (key == null) throw new InvalidOperationException("Не удалось найти запись расширения в реестре.");
+                if (key == null) throw new InvalidOperationException(Localization.T("Не удалось найти запись расширения в реестре.", "Couldn't find the extension's registry entry."));
                 key.SetValue(null, enabled ? extension.Clsid : "-" + extension.Clsid);
             }
         }
@@ -324,7 +324,7 @@ namespace QuickLaunchMenuWinForms.Services
 
             using (var newParent = Registry.CurrentUser.CreateSubKey(newParentPath, writable: true))
             {
-                if (newParent == null) throw new InvalidOperationException("Не удалось открыть раздел реестра HKCU.");
+                if (newParent == null) throw new InvalidOperationException(Localization.T("Не удалось открыть раздел реестра HKCU.", "Couldn't open the HKCU registry section."));
 
                 var oldParentPath = ResolveParentPath(existingGroupDisplayName);
                 var isMovingOrRenaming = existingKeyName != null &&
@@ -340,7 +340,7 @@ namespace QuickLaunchMenuWinForms.Services
 
                 using (var entryKey = newParent.CreateSubKey(newKeyName, writable: true))
                 {
-                    if (entryKey == null) throw new InvalidOperationException("Не удалось создать пункт меню.");
+                    if (entryKey == null) throw new InvalidOperationException(Localization.T("Не удалось создать пункт меню.", "Couldn't create the menu entry."));
 
                     entryKey.SetValue("MUIVerb", displayName);
 
@@ -349,7 +349,7 @@ namespace QuickLaunchMenuWinForms.Services
 
                     using (var cmdKey = entryKey.CreateSubKey("command", writable: true))
                     {
-                        if (cmdKey == null) throw new InvalidOperationException("Не удалось задать команду запуска.");
+                        if (cmdKey == null) throw new InvalidOperationException(Localization.T("Не удалось задать команду запуска.", "Couldn't set the launch command."));
                         cmdKey.SetValue(null, BuildCommandLine(targetPath, arguments));
                     }
                 }
@@ -366,7 +366,9 @@ namespace QuickLaunchMenuWinForms.Services
         {
             if (node.IsProtected)
             {
-                throw new InvalidOperationException("Пункты из HKEY_LOCAL_MACHINE нельзя удалять из этой программы без прав администратора.");
+                throw new InvalidOperationException(Localization.T(
+                    "Пункты из HKEY_LOCAL_MACHINE нельзя удалять из этой программы без прав администратора.",
+                    "Entries from HKEY_LOCAL_MACHINE can't be removed from this program without administrator rights."));
             }
 
             using (var root = Registry.CurrentUser.OpenSubKey(node.SourceRootPath, writable: true))
@@ -382,7 +384,7 @@ namespace QuickLaunchMenuWinForms.Services
         {
             using (var root = Registry.LocalMachine.OpenSubKey(node.SourceRootPath, writable: true))
             {
-                if (root == null) throw new UnauthorizedAccessException("Нет доступа на запись в HKEY_LOCAL_MACHINE.");
+                if (root == null) throw new UnauthorizedAccessException(Localization.T("Нет доступа на запись в HKEY_LOCAL_MACHINE.", "No write access to HKEY_LOCAL_MACHINE."));
                 root.DeleteSubKeyTree(node.KeyName, throwOnMissingSubKey: false);
             }
         }
@@ -419,7 +421,7 @@ namespace QuickLaunchMenuWinForms.Services
                 if (key == null) return;
 
                 var exePath = GetAppExecutablePath();
-                key.SetValue("MUIVerb", "Добавить в Быстрый запуск");
+                key.SetValue("MUIVerb", Localization.T("Добавить в Быстрый запуск", "Add to Quick Launch"));
                 key.SetValue("Icon", $"{exePath},0");
 
                 using (var cmd = key.CreateSubKey("command", writable: true))
@@ -487,7 +489,7 @@ namespace QuickLaunchMenuWinForms.Services
             var groupKeyName = BuildGroupKeyName(groupDisplayName);
             using (var groupKey = Registry.CurrentUser.CreateSubKey(_writeRootPath + "\\" + groupKeyName, writable: true))
             {
-                if (groupKey == null) throw new InvalidOperationException("Не удалось создать группу меню.");
+                if (groupKey == null) throw new InvalidOperationException(Localization.T("Не удалось создать группу меню.", "Couldn't create the menu group."));
 
                 groupKey.SetValue("MUIVerb", groupDisplayName);
                 groupKey.SetValue("Icon", $"{GetAppExecutablePath()},0");

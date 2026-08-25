@@ -26,8 +26,8 @@ namespace QuickLaunchMenuWinForms
 
             if (existingEntry != null)
             {
-                Text = "Изменить пункт «Отправить»";
-                _saveButton.Text = "Сохранить";
+                Text = Localization.T("Изменить пункт «Отправить»", "Edit \"Send To\" entry");
+                _saveButton.Text = Localization.T("Сохранить", "Save");
                 _nameBox.Text = existingEntry.DisplayName;
                 _targetBox.Text = existingEntry.TargetPath;
                 _argumentsBox.Text = existingEntry.Arguments;
@@ -37,7 +37,7 @@ namespace QuickLaunchMenuWinForms
 
         private void BuildUi()
         {
-            Text = "Новый пункт «Отправить»";
+            Text = Localization.T("Новый пункт «Отправить»", "New \"Send To\" entry");
             FormBorderStyle = FormBorderStyle.FixedDialog;
             StartPosition = FormStartPosition.CenterParent;
             MaximizeBox = false;
@@ -61,24 +61,24 @@ namespace QuickLaunchMenuWinForms
             layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             layout.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
 
-            AddLabel(layout, "Название в меню «Отправить»");
+            AddLabel(layout, Localization.T("Название в меню «Отправить»", "Name in the \"Send To\" menu"));
             _nameBox = new TextBox { Dock = DockStyle.Fill };
             layout.Controls.Add(_nameBox); layout.SetColumnSpan(_nameBox, 2);
 
-            AddLabel(layout, "Программа, которая получит выбранный файл/папку");
+            AddLabel(layout, Localization.T("Программа, которая получит выбранный файл/папку", "Program that will receive the selected file/folder"));
             _targetBox = new TextBox { Dock = DockStyle.Fill };
-            var browseTargetButton = new Button { Text = "Обзор...", AutoSize = true };
+            var browseTargetButton = new Button { Text = Localization.T("Обзор...", "Browse..."), AutoSize = true };
             browseTargetButton.Click += (s, e) => BrowseTarget();
             layout.Controls.Add(_targetBox);
             layout.Controls.Add(browseTargetButton);
 
-            AddLabel(layout, "Доп. аргументы перед путём к файлу (необязательно)");
+            AddLabel(layout, Localization.T("Доп. аргументы перед путём к файлу (необязательно)", "Extra arguments before the file path (optional)"));
             _argumentsBox = new TextBox { Dock = DockStyle.Fill };
             layout.Controls.Add(_argumentsBox); layout.SetColumnSpan(_argumentsBox, 2);
 
-            AddLabel(layout, "Своя иконка (необязательно)");
+            AddLabel(layout, Localization.T("Своя иконка (необязательно)", "Custom icon (optional)"));
             _iconBox = new TextBox { Dock = DockStyle.Fill };
-            var browseIconButton = new Button { Text = "Обзор...", AutoSize = true };
+            var browseIconButton = new Button { Text = Localization.T("Обзор...", "Browse..."), AutoSize = true };
             browseIconButton.Click += (s, e) => BrowseIcon();
             layout.Controls.Add(_iconBox);
             layout.Controls.Add(browseIconButton);
@@ -91,8 +91,8 @@ namespace QuickLaunchMenuWinForms
                 Padding = new Padding(0, 8, 0, 0)
             };
 
-            _saveButton = new Button { Text = "Добавить", AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
-            var cancelButton = new Button { Text = "Отмена", AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
+            _saveButton = new Button { Text = Localization.T("Добавить", "Add"), AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
+            var cancelButton = new Button { Text = Localization.T("Отмена", "Cancel"), AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
             _saveButton.Click += (s, e) => Save();
             cancelButton.Click += (s, e) => { DialogResult = DialogResult.Cancel; Close(); };
             buttonPanel.Controls.Add(_saveButton);
@@ -120,7 +120,7 @@ namespace QuickLaunchMenuWinForms
         {
             using (var dialog = new OpenFileDialog
             {
-                Filter = "Программы и ярлыки (*.exe;*.lnk;*.*)|*.exe;*.lnk;*.*",
+                Filter = Localization.T("Программы и ярлыки (*.exe;*.lnk;*.*)|*.exe;*.lnk;*.*", "Programs and shortcuts (*.exe;*.lnk;*.*)|*.exe;*.lnk;*.*"),
                 CheckFileExists = true
             })
             {
@@ -139,7 +139,7 @@ namespace QuickLaunchMenuWinForms
         {
             using (var dialog = new OpenFileDialog
             {
-                Filter = "Иконки и программы (*.ico;*.exe;*.dll)|*.ico;*.exe;*.dll|Все файлы (*.*)|*.*",
+                Filter = Localization.T("Иконки и программы (*.ico;*.exe;*.dll)|*.ico;*.exe;*.dll|Все файлы (*.*)|*.*", "Icons and programs (*.ico;*.exe;*.dll)|*.ico;*.exe;*.dll|All files (*.*)|*.*"),
                 CheckFileExists = true
             })
             {
@@ -157,17 +157,20 @@ namespace QuickLaunchMenuWinForms
 
             if (string.IsNullOrWhiteSpace(name))
             {
-                MessageBox.Show(this, "Укажи название пункта.", "Проверь данные", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(this, Localization.T("Укажи название пункта.", "Enter a name for the entry."),
+                    Localization.T("Проверь данные", "Check the details"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             if (string.IsNullOrWhiteSpace(target))
             {
-                MessageBox.Show(this, "Укажи программу.", "Проверь данные", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(this, Localization.T("Укажи программу.", "Enter a program."),
+                    Localization.T("Проверь данные", "Check the details"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             if (Path.IsPathRooted(target) && !File.Exists(target) && !Directory.Exists(target))
             {
-                MessageBox.Show(this, "Указанный путь не найден.", "Проверь данные", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(this, Localization.T("Указанный путь не найден.", "That path wasn't found."),
+                    Localization.T("Проверь данные", "Check the details"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -176,7 +179,9 @@ namespace QuickLaunchMenuWinForms
 
             if ((isRename || isNewCollision) && _service.NameExists(name))
             {
-                var result = MessageBox.Show(this, $"Пункт «{name}» уже есть. Заменить его?", "Пункт уже существует",
+                var result = MessageBox.Show(this,
+                    Localization.T($"Пункт «{name}» уже есть. Заменить его?", $"An entry \"{name}\" already exists. Replace it?"),
+                    Localization.T("Пункт уже существует", "Entry already exists"),
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result != DialogResult.Yes) return;
             }
@@ -187,7 +192,8 @@ namespace QuickLaunchMenuWinForms
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, $"Не удалось сохранить.\n\n{ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, Localization.T($"Не удалось сохранить.\n\n{ex.Message}", $"Couldn't save.\n\n{ex.Message}"),
+                    Localization.T("Ошибка", "Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

@@ -12,8 +12,8 @@ namespace QuickLaunchMenuWinForms
 {
     /// <summary>One full menu-management view (list + preview + buttons) for a single menu scope
     /// (desktop background, folder, or file). Watches the registry so it live-refreshes on any change —
-    /// including entries added from outside via the file/folder "Добавить в Быстрый запуск" verb.
-    /// COM shell extensions (7-Zip, "give access to", etc.) live in the separate "Расширения" tab —
+    /// including entries added from outside via the file/folder "Add to Quick Launch" verb.
+    /// COM shell extensions (7-Zip, "give access to", etc.) live in the separate "Extensions" tab —
     /// see ExtensionsPanel — since their menu text can't be resolved from the registry, they'd otherwise
     /// show up under confusing internal component names buried among everything else here.</summary>
     public class MenuManagerPanel : UserControl
@@ -84,9 +84,11 @@ namespace QuickLaunchMenuWinForms
                 SmallImageList = _icons,
                 ShowGroups = true
             };
-            _listView.Columns.Add("Название", 220);
-            _listView.Columns.Add(_scope == MenuScope.Desktop ? "Программа / путь" : "Программа", 300);
-            _listView.Columns.Add("Тип", 90);
+            _listView.Columns.Add(Localization.T("Название", "Name"), 220);
+            _listView.Columns.Add(_scope == MenuScope.Desktop
+                ? Localization.T("Программа / путь", "Program / path")
+                : Localization.T("Программа", "Program"), 300);
+            _listView.Columns.Add(Localization.T("Тип", "Type"), 90);
             _listView.Columns.Add("", 34).Tag = "fixed"; // "⋯" — open the containing folder
             _listView.Columns.Add("", 34).Tag = "fixed"; // "?" — search this entry online
             _listView.DoubleClick += (s, e) => EditSelected();
@@ -98,7 +100,7 @@ namespace QuickLaunchMenuWinForms
 
             _emptyLabel = new Label
             {
-                Text = "В меню пока пусто.",
+                Text = Localization.T("В меню пока пусто.", "The menu is empty."),
                 ForeColor = SystemColors.GrayText,
                 AutoSize = false,
                 TextAlign = ContentAlignment.MiddleCenter,
@@ -124,12 +126,12 @@ namespace QuickLaunchMenuWinForms
                 Padding = new Padding(16, 8, 16, 8)
             };
 
-            var addButton = new Button { Text = "Добавить...", AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
-            var editButton = new Button { Text = "Изменить", AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
-            var removeButton = new Button { Text = "Удалить", AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
-            var refreshButton = new Button { Text = "Обновить", AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
-            var exportButton = new Button { Text = "Экспорт...", AutoSize = true, Padding = new Padding(8, 4, 8, 4), Margin = new Padding(24, 3, 3, 3) };
-            var importButton = new Button { Text = "Импорт...", AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
+            var addButton = new Button { Text = Localization.T("Добавить...", "Add..."), AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
+            var editButton = new Button { Text = Localization.T("Изменить", "Edit"), AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
+            var removeButton = new Button { Text = Localization.T("Удалить", "Remove"), AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
+            var refreshButton = new Button { Text = Localization.T("Обновить", "Refresh"), AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
+            var exportButton = new Button { Text = Localization.T("Экспорт...", "Export..."), AutoSize = true, Padding = new Padding(8, 4, 8, 4), Margin = new Padding(24, 3, 3, 3) };
+            var importButton = new Button { Text = Localization.T("Импорт...", "Import..."), AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
 
             addButton.Click += (s, e) => AddNew();
             editButton.Click += (s, e) => EditSelected();
@@ -213,14 +215,14 @@ namespace QuickLaunchMenuWinForms
             _listView.Groups.Clear();
             _icons.Images.Clear();
 
-            var tree = RunSafely(() => _service.GetMenuTree(), "Не удалось прочитать меню.");
+            var tree = RunSafely(() => _service.GetMenuTree(), Localization.T("Не удалось прочитать меню.", "Couldn't read the menu."));
             if (tree == null) return;
 
             var directGroups = new System.Collections.Generic.Dictionary<string, ListViewGroup>();
             ListViewGroup GetDirectGroup(string sourceLabel)
             {
                 if (directGroups.TryGetValue(sourceLabel, out var existing)) return existing;
-                var created = new ListViewGroup($"Прямые ссылки — {sourceLabel}");
+                var created = new ListViewGroup(Localization.T($"Прямые ссылки — {sourceLabel}", $"Direct links — {sourceLabel}"));
                 _listView.Groups.Add(created);
                 directGroups[sourceLabel] = created;
                 return created;
@@ -230,14 +232,15 @@ namespace QuickLaunchMenuWinForms
             {
                 if (node.IsGroup)
                 {
-                    var header = node.DisplayName + (node.IsProtected ? "  🔒" : node.IsOwned ? "" : "  (другая программа)")
+                    var header = node.DisplayName +
+                        (node.IsProtected ? "  🔒" : node.IsOwned ? "" : Localization.T("  (другая программа)", "  (another program)"))
                         + $"  [{node.SourceLabel}]";
                     var group = new ListViewGroup(header);
                     _listView.Groups.Add(group);
 
                     if (node.Children.Count == 0)
                     {
-                        var placeholder = new ListViewItem("(пусто или недоступно для просмотра)") { Group = group };
+                        var placeholder = new ListViewItem(Localization.T("(пусто или недоступно для просмотра)", "(empty or unavailable to view)")) { Group = group };
                         placeholder.SubItems.Add(string.Empty);
                         placeholder.SubItems.Add(string.Empty);
                         placeholder.SubItems.Add(string.Empty);
@@ -272,7 +275,9 @@ namespace QuickLaunchMenuWinForms
             // of the machine) — that's just where an installer chose to write it, often because it ran
             // elevated or "for all users" was checked. Plenty of ordinary third-party apps (Notepad++,
             // MPC-HC, FastStone, etc.) end up there — it does NOT mean it's a genuine Windows component.
-            var typeLabel = node.IsProtected ? "🔒 Общий (HKLM)" : node.IsOwned ? "Ваш" : "Другая программа";
+            var typeLabel = node.IsProtected
+                ? Localization.T("🔒 Общий (HKLM)", "🔒 Common (HKLM)")
+                : node.IsOwned ? Localization.T("Ваш", "Yours") : Localization.T("Другая программа", "Another program");
             var item = new ListViewItem(node.DisplayName) { Tag = node, Group = group };
             item.SubItems.Add(node.Link?.TargetPath ?? string.Empty);
             item.SubItems.Add(typeLabel);
@@ -336,14 +341,14 @@ namespace QuickLaunchMenuWinForms
             var path = node?.Link?.TargetPath;
             if (string.IsNullOrWhiteSpace(path))
             {
-                Info("У этого пункта нет пути к файлу.");
+                Info(Localization.T("У этого пункта нет пути к файлу.", "This entry has no file path."));
                 return;
             }
 
             var resolved = PathResolver.ResolveExisting(path!);
             if (resolved == null)
             {
-                Info("Файл или папка не найдены — ни по указанному пути, ни в PATH.");
+                Info(Localization.T("Файл или папка не найдены — ни по указанному пути, ни в PATH.", "File or folder not found — neither at the given path nor in PATH."));
                 return;
             }
 
@@ -354,8 +359,8 @@ namespace QuickLaunchMenuWinForms
             }
             catch (Exception ex)
             {
-                MessageBox.Show(FindForm(), $"Не удалось открыть папку.\n\n{ex.Message}", "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(FindForm(), Localization.T($"Не удалось открыть папку.\n\n{ex.Message}", $"Couldn't open the folder.\n\n{ex.Message}"),
+                    Localization.T("Ошибка", "Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -384,7 +389,7 @@ namespace QuickLaunchMenuWinForms
                 try { queryParts.Add(Path.GetFileName(targetPath)); }
                 catch { /* malformed path — skip the filename, the display name alone is still useful */ }
             }
-            queryParts.Add("что это за программа и пункт меню");
+            queryParts.Add(Localization.T("что это за программа и пункт меню", "what is this program and menu entry"));
 
             try
             {
@@ -392,8 +397,8 @@ namespace QuickLaunchMenuWinForms
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Не удалось открыть браузер.\n\n{ex.Message}", "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Localization.T($"Не удалось открыть браузер.\n\n{ex.Message}", $"Couldn't open the browser.\n\n{ex.Message}"),
+                    Localization.T("Ошибка", "Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -415,19 +420,21 @@ namespace QuickLaunchMenuWinForms
             var node = SelectedNode;
             if (node == null)
             {
-                Info("Сначала выбери пункт в списке.");
+                Info(Localization.T("Сначала выбери пункт в списке.", "Select an entry in the list first."));
                 return;
             }
 
             if (node.IsGroup || node.Link == null)
             {
-                Info("Группы и системные пункты редактировать нельзя — можно только удалить целиком.");
+                Info(Localization.T("Группы и системные пункты редактировать нельзя — можно только удалить целиком.",
+                    "Groups and non-link entries can't be edited — only removed entirely."));
                 return;
             }
 
             if (!node.IsOwned && !node.IsProtected)
             {
-                Info("Этот пункт создан другой программой — его нельзя изменить отсюда, только удалить.");
+                Info(Localization.T("Этот пункт создан другой программой — его нельзя изменить отсюда, только удалить.",
+                    "This entry was created by another program — it can't be edited from here, only removed."));
                 return;
             }
 
@@ -445,7 +452,7 @@ namespace QuickLaunchMenuWinForms
             var node = SelectedNode;
             if (node == null)
             {
-                Info("Сначала выбери пункт в списке.");
+                Info(Localization.T("Сначала выбери пункт в списке.", "Select an entry in the list first."));
                 return;
             }
 
@@ -459,22 +466,27 @@ namespace QuickLaunchMenuWinForms
             if (!node.IsOwned)
             {
                 question = node.IsGroup
-                    ? $"«{node.DisplayName}» — это меню от ДРУГОЙ программы, со всеми пунктами внутри. Удаление отключит её интеграцию с правым кликом. Точно удалить?"
-                    : $"«{node.DisplayName}» создан ДРУГОЙ программой, не этим инструментом. Удаление может повлиять на неё. Точно удалить?";
+                    ? Localization.T(
+                        $"«{node.DisplayName}» — это меню от ДРУГОЙ программы, со всеми пунктами внутри. Удаление отключит её интеграцию с правым кликом. Точно удалить?",
+                        $"\"{node.DisplayName}\" is a menu from ANOTHER program, with everything inside it. Removing it will disable that program's right-click integration. Remove it anyway?")
+                    : Localization.T(
+                        $"«{node.DisplayName}» создан ДРУГОЙ программой, не этим инструментом. Удаление может повлиять на неё. Точно удалить?",
+                        $"\"{node.DisplayName}\" was created by ANOTHER program, not this tool. Removing it may affect that program. Remove it anyway?");
             }
             else
             {
                 question = node.IsGroup
-                    ? $"Удалить группу «{node.DisplayName}» со всеми пунктами внутри?"
-                    : $"Удалить «{node.DisplayName}» из меню?";
+                    ? Localization.T($"Удалить группу «{node.DisplayName}» со всеми пунктами внутри?", $"Remove the group \"{node.DisplayName}\" and everything inside it?")
+                    : Localization.T($"Удалить «{node.DisplayName}» из меню?", $"Remove \"{node.DisplayName}\" from the menu?");
             }
 
-            var result = MessageBox.Show(FindForm(), question, "Удалить пункт меню",
+            var result = MessageBox.Show(FindForm(), question, Localization.T("Удалить пункт меню", "Remove menu entry"),
                 MessageBoxButtons.YesNo, node.IsOwned ? MessageBoxIcon.Question : MessageBoxIcon.Warning);
 
             if (result == DialogResult.Yes)
             {
-                RunSafely(() => { _service.RemoveNode(node); return true; }, "Не удалось удалить пункт меню.");
+                RunSafely(() => { _service.RemoveNode(node); return true; },
+                    Localization.T("Не удалось удалить пункт меню.", "Couldn't remove the menu entry."));
                 LoadEntries();
             }
         }
@@ -485,14 +497,22 @@ namespace QuickLaunchMenuWinForms
         private async System.Threading.Tasks.Task RemoveProtectedNodeAsync(MenuNode node)
         {
             var question = node.IsGroup
-                ? $"«{node.DisplayName}» зарегистрирован в HKEY_LOCAL_MACHINE (для всех пользователей компьютера) — " +
-                  "это не обязательно часть Windows, так делают инсталляторы многих обычных программ. Удаляется вся " +
-                  "группа со всеми пунктами внутри. Нужны права администратора — запросить их сейчас?"
-                : $"«{node.DisplayName}» зарегистрирован в HKEY_LOCAL_MACHINE (для всех пользователей компьютера) — " +
-                  "это не обязательно часть Windows, так делают инсталляторы многих обычных программ. Нужны права " +
-                  "администратора — запросить их сейчас?";
+                ? Localization.T(
+                    $"«{node.DisplayName}» зарегистрирован в HKEY_LOCAL_MACHINE (для всех пользователей компьютера) — " +
+                    "это не обязательно часть Windows, так делают инсталляторы многих обычных программ. Удаляется вся " +
+                    "группа со всеми пунктами внутри. Нужны права администратора — запросить их сейчас?",
+                    $"\"{node.DisplayName}\" is registered in HKEY_LOCAL_MACHINE (for every user of the machine) — " +
+                    "that doesn't necessarily mean it's part of Windows, many ordinary installers do this. This removes " +
+                    "the whole group with everything inside it. Administrator rights are needed — request them now?")
+                : Localization.T(
+                    $"«{node.DisplayName}» зарегистрирован в HKEY_LOCAL_MACHINE (для всех пользователей компьютера) — " +
+                    "это не обязательно часть Windows, так делают инсталляторы многих обычных программ. Нужны права " +
+                    "администратора — запросить их сейчас?",
+                    $"\"{node.DisplayName}\" is registered in HKEY_LOCAL_MACHINE (for every user of the machine) — " +
+                    "that doesn't necessarily mean it's part of Windows, many ordinary installers do this. Administrator " +
+                    "rights are needed — request them now?");
 
-            var confirm = MessageBox.Show(FindForm(), question, "Нужны права администратора",
+            var confirm = MessageBox.Show(FindForm(), question, Localization.T("Нужны права администратора", "Administrator rights needed"),
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (confirm != DialogResult.Yes) return;
 
@@ -503,8 +523,10 @@ namespace QuickLaunchMenuWinForms
 
             if (!ok)
             {
-                MessageBox.Show(FindForm(), "Не удалось получить права администратора (запрос отклонён или произошла ошибка).",
-                    "Удалить пункт меню", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(FindForm(),
+                    Localization.T("Не удалось получить права администратора (запрос отклонён или произошла ошибка).",
+                        "Couldn't get administrator rights (the request was declined or something went wrong)."),
+                    Localization.T("Удалить пункт меню", "Remove menu entry"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -535,16 +557,16 @@ namespace QuickLaunchMenuWinForms
             {
                 if (dialog.ShowDialog(FindForm()) != DialogResult.OK) return;
 
-                var tree = RunSafely(() => _service.GetMenuTree(), "Не удалось прочитать меню.");
+                var tree = RunSafely(() => _service.GetMenuTree(), Localization.T("Не удалось прочитать меню.", "Couldn't read the menu."));
                 if (tree == null) return;
 
                 var links = MenuExportService.FlattenOwnedLinks(tree);
                 var ok = RunSafely(() => { MenuExportService.Export(dialog.FileName, links); return true; },
-                    "Не удалось сохранить файл экспорта.");
+                    Localization.T("Не удалось сохранить файл экспорта.", "Couldn't save the export file."));
 
                 if (ok == true)
                 {
-                    Info($"Сохранено пунктов: {links.Count}");
+                    Info(Localization.T($"Сохранено пунктов: {links.Count}", $"Entries saved: {links.Count}"));
                 }
             }
         }
@@ -555,18 +577,20 @@ namespace QuickLaunchMenuWinForms
             {
                 if (dialog.ShowDialog(FindForm()) != DialogResult.OK) return;
 
-                var imported = RunSafely(() => MenuExportService.Import(dialog.FileName), "Не удалось прочитать файл импорта.");
+                var imported = RunSafely(() => MenuExportService.Import(dialog.FileName), Localization.T("Не удалось прочитать файл импорта.", "Couldn't read the import file."));
                 if (imported == null) return;
 
                 if (imported.Count == 0)
                 {
-                    Info("В файле нет ни одного пункта.");
+                    Info(Localization.T("В файле нет ни одного пункта.", "The file has no entries."));
                     return;
                 }
 
                 var result = MessageBox.Show(FindForm(),
-                    $"Импортировать {imported.Count} пункт(ов)? Пункты с совпадающими названиями (в той же группе) будут перезаписаны.",
-                    "Импорт", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    Localization.T(
+                        $"Импортировать {imported.Count} пункт(ов)? Пункты с совпадающими названиями (в той же группе) будут перезаписаны.",
+                        $"Import {imported.Count} entr{(imported.Count == 1 ? "y" : "ies")}? Entries with matching names (in the same group) will be overwritten."),
+                    Localization.T("Импорт", "Import"), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result != DialogResult.Yes) return;
 
                 RunSafely(() =>
@@ -576,7 +600,7 @@ namespace QuickLaunchMenuWinForms
                         _service.AddOrUpdateLink(null, null, entry.DisplayName, entry.TargetPath, entry.Arguments, entry.IconPath, entry.GroupDisplayName);
                     }
                     return true;
-                }, "Не удалось импортировать один или несколько пунктов.");
+                }, Localization.T("Не удалось импортировать один или несколько пунктов.", "Couldn't import one or more entries."));
 
                 LoadEntries();
             }
@@ -594,7 +618,7 @@ namespace QuickLaunchMenuWinForms
             }
             catch (Exception ex)
             {
-                MessageBox.Show(FindForm(), $"{errorMessage}\n\n{ex.Message}", "Ошибка",
+                MessageBox.Show(FindForm(), $"{errorMessage}\n\n{ex.Message}", Localization.T("Ошибка", "Error"),
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
@@ -608,7 +632,7 @@ namespace QuickLaunchMenuWinForms
             }
             catch (Exception ex)
             {
-                MessageBox.Show(FindForm(), $"{errorMessage}\n\n{ex.Message}", "Ошибка",
+                MessageBox.Show(FindForm(), $"{errorMessage}\n\n{ex.Message}", Localization.T("Ошибка", "Error"),
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }

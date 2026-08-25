@@ -35,7 +35,7 @@ namespace QuickLaunchMenuWinForms
             var headerPanel = new Panel { Dock = DockStyle.Top, Height = 56, Padding = new Padding(16, 10, 16, 4) };
             var titleLabel = new Label
             {
-                Text = "Меню «Отправить» (Send To)",
+                Text = Localization.T("Меню «Отправить» (Send To)", "\"Send To\" menu"),
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
                 AutoSize = false,
                 Dock = DockStyle.Top,
@@ -43,7 +43,9 @@ namespace QuickLaunchMenuWinForms
             };
             var subtitleLabel = new Label
             {
-                Text = $"Не реестр — просто ярлыки в {_service.FolderPath}. Программа получает выбранный файл автоматически.",
+                Text = Localization.T(
+                    $"Не реестр — просто ярлыки в {_service.FolderPath}. Программа получает выбранный файл автоматически.",
+                    $"Not the registry — just shortcuts in {_service.FolderPath}. The program automatically gets the selected file."),
                 ForeColor = SystemColors.GrayText,
                 AutoSize = false,
                 Dock = DockStyle.Top,
@@ -62,8 +64,8 @@ namespace QuickLaunchMenuWinForms
                 HideSelection = false,
                 SmallImageList = _icons
             };
-            _listView.Columns.Add("Название", 220);
-            _listView.Columns.Add("Программа", 380);
+            _listView.Columns.Add(Localization.T("Название", "Name"), 220);
+            _listView.Columns.Add(Localization.T("Программа", "Program"), 380);
             _listView.Columns.Add("", 34).Tag = "fixed"; // "⋯" — open the containing folder
             _listView.Columns.Add("", 34).Tag = "fixed"; // "?" — search this entry online
             _listView.DoubleClick += (s, e) => EditSelected();
@@ -75,7 +77,7 @@ namespace QuickLaunchMenuWinForms
 
             _emptyLabel = new Label
             {
-                Text = "В меню «Отправить» пока пусто.",
+                Text = Localization.T("В меню «Отправить» пока пусто.", "The \"Send To\" menu is empty."),
                 ForeColor = SystemColors.GrayText,
                 AutoSize = false,
                 TextAlign = ContentAlignment.MiddleCenter,
@@ -95,11 +97,11 @@ namespace QuickLaunchMenuWinForms
                 Padding = new Padding(16, 8, 16, 8)
             };
 
-            var addButton = new Button { Text = "Добавить...", AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
-            var editButton = new Button { Text = "Изменить", AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
-            var removeButton = new Button { Text = "Удалить", AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
-            var refreshButton = new Button { Text = "Обновить", AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
-            var openFolderButton = new Button { Text = "Открыть папку", AutoSize = true, Padding = new Padding(8, 4, 8, 4), Margin = new Padding(24, 3, 3, 3) };
+            var addButton = new Button { Text = Localization.T("Добавить...", "Add..."), AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
+            var editButton = new Button { Text = Localization.T("Изменить", "Edit"), AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
+            var removeButton = new Button { Text = Localization.T("Удалить", "Remove"), AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
+            var refreshButton = new Button { Text = Localization.T("Обновить", "Refresh"), AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
+            var openFolderButton = new Button { Text = Localization.T("Открыть папку", "Open folder"), AutoSize = true, Padding = new Padding(8, 4, 8, 4), Margin = new Padding(24, 3, 3, 3) };
 
             addButton.Click += (s, e) => AddNew();
             editButton.Click += (s, e) => EditSelected();
@@ -159,7 +161,7 @@ namespace QuickLaunchMenuWinForms
             _listView.Items.Clear();
             _icons.Images.Clear();
 
-            var entries = RunSafely(() => _service.GetEntries(), "Не удалось прочитать папку «Отправить».");
+            var entries = RunSafely(() => _service.GetEntries(), Localization.T("Не удалось прочитать папку «Отправить».", "Couldn't read the \"Send To\" folder."));
             if (entries == null) return;
 
             foreach (var entry in entries)
@@ -209,14 +211,14 @@ namespace QuickLaunchMenuWinForms
             var path = entry?.TargetPath;
             if (entry == null || entry.IsSpecial || string.IsNullOrWhiteSpace(path))
             {
-                Info("У этого пункта нет пути к файлу.");
+                Info(Localization.T("У этого пункта нет пути к файлу.", "This entry has no file path."));
                 return;
             }
 
             var resolved = PathResolver.ResolveExisting(path!);
             if (resolved == null)
             {
-                Info("Файл или папка не найдены — ни по указанному пути, ни в PATH.");
+                Info(Localization.T("Файл или папка не найдены — ни по указанному пути, ни в PATH.", "File or folder not found — neither at the given path nor in PATH."));
                 return;
             }
 
@@ -227,8 +229,8 @@ namespace QuickLaunchMenuWinForms
             }
             catch (Exception ex)
             {
-                MessageBox.Show(FindForm(), $"Не удалось открыть папку.\n\n{ex.Message}", "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(FindForm(), Localization.T($"Не удалось открыть папку.\n\n{ex.Message}", $"Couldn't open the folder.\n\n{ex.Message}"),
+                    Localization.T("Ошибка", "Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -259,11 +261,12 @@ namespace QuickLaunchMenuWinForms
         private void EditSelected()
         {
             var entry = SelectedEntry;
-            if (entry == null) { Info("Сначала выбери пункт в списке."); return; }
+            if (entry == null) { Info(Localization.T("Сначала выбери пункт в списке.", "Select an entry in the list first.")); return; }
 
             if (entry.IsSpecial)
             {
-                Info("Это системный пункт Windows (не обычный ярлык) — его нельзя редактировать, только удалить.");
+                Info(Localization.T("Это системный пункт Windows (не обычный ярлык) — его нельзя редактировать, только удалить.",
+                    "This is a built-in Windows entry (not a regular shortcut) — it can't be edited, only removed."));
                 return;
             }
 
@@ -276,13 +279,14 @@ namespace QuickLaunchMenuWinForms
         private void RemoveSelected()
         {
             var entry = SelectedEntry;
-            if (entry == null) { Info("Сначала выбери пункт в списке."); return; }
+            if (entry == null) { Info(Localization.T("Сначала выбери пункт в списке.", "Select an entry in the list first.")); return; }
 
-            var result = MessageBox.Show(FindForm(), $"Удалить «{entry.DisplayName}» из меню «Отправить»?",
-                "Удалить пункт", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var result = MessageBox.Show(FindForm(),
+                Localization.T($"Удалить «{entry.DisplayName}» из меню «Отправить»?", $"Remove \"{entry.DisplayName}\" from the \"Send To\" menu?"),
+                Localization.T("Удалить пункт", "Remove entry"), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
-                RunSafely(() => { _service.Remove(entry.KeyName); return true; }, "Не удалось удалить пункт.");
+                RunSafely(() => { _service.Remove(entry.KeyName); return true; }, Localization.T("Не удалось удалить пункт.", "Couldn't remove the entry."));
                 LoadEntries();
             }
         }
@@ -294,14 +298,14 @@ namespace QuickLaunchMenuWinForms
         }
 
         private void Info(string message) =>
-            MessageBox.Show(FindForm(), message, "Отправить", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(FindForm(), message, Localization.T("Отправить", "Send To"), MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         private T? RunSafely<T>(Func<T> action, string errorMessage) where T : class
         {
             try { return action(); }
             catch (Exception ex)
             {
-                MessageBox.Show(FindForm(), $"{errorMessage}\n\n{ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(FindForm(), $"{errorMessage}\n\n{ex.Message}", Localization.T("Ошибка", "Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
         }
@@ -311,7 +315,7 @@ namespace QuickLaunchMenuWinForms
             try { return action(); }
             catch (Exception ex)
             {
-                MessageBox.Show(FindForm(), $"{errorMessage}\n\n{ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(FindForm(), $"{errorMessage}\n\n{ex.Message}", Localization.T("Ошибка", "Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
         }

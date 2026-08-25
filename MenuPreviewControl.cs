@@ -25,7 +25,7 @@ namespace QuickLaunchMenuWinForms
 
             var caption = new Label
             {
-                Text = "Предпросмотр (правый клик на рабочем столе)",
+                Text = Localization.T("Предпросмотр (правый клик на рабочем столе)", "Preview (right-click)"),
                 Dock = DockStyle.Top,
                 Height = 34,
                 ForeColor = SystemColors.GrayText,
@@ -56,7 +56,7 @@ namespace QuickLaunchMenuWinForms
 
             if (tree.Count == 0 && (extensions == null || extensions.Count == 0))
             {
-                _rows.Controls.Add(BuildRow("Пока пусто", null, null, indent: 0, bold: false, chevron: false, italic: true));
+                _rows.Controls.Add(BuildRow(Localization.T("Пока пусто", "Nothing yet"), null, null, indent: 0, bold: false, chevron: false, italic: true));
             }
             else
             {
@@ -87,7 +87,7 @@ namespace QuickLaunchMenuWinForms
                 {
                     foreach (var ext in extensions)
                     {
-                        var label = "🔌 " + ext.DisplayName + (ext.Extension != null && ext.Extension.IsDisabled ? " (выкл)" : "");
+                        var label = "🔌 " + ext.DisplayName + (ext.Extension != null && ext.Extension.IsDisabled ? Localization.T(" (выкл)", " (off)") : "");
                         _rows.Controls.Add(BuildRow(label, null, null, indent: 0, bold: false, chevron: false,
                             italic: ext.Extension != null && ext.Extension.IsDisabled));
                     }

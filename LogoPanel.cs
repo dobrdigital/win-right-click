@@ -4,6 +4,7 @@ using System.Drawing.Drawing2D;
 using System.IO;
 using System.Windows.Forms;
 using Svg;
+using QuickLaunchMenuWinForms.Services;
 
 namespace QuickLaunchMenuWinForms
 {
@@ -101,7 +102,7 @@ namespace QuickLaunchMenuWinForms
             using (var brush = new SolidBrush(Theme.MutedText))
             using (var format = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
             {
-                g.DrawString($"логотип\n{Width}×{Height}, SVG", Font, brush, ClientRectangle, format);
+                g.DrawString(Localization.T($"логотип\n{Width}×{Height}, SVG", $"logo\n{Width}×{Height}, SVG"), Font, brush, ClientRectangle, format);
             }
         }
     }

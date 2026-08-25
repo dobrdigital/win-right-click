@@ -23,12 +23,14 @@ somewhere only admins can touch.
 every right-click menu on your PC — desktop, folders, files, "Send to", and
 extensions like 7-Zip — in one place, in plain language instead of cryptic
 codes. You can add your own entries, edit or remove anyone's, and even the
-"locked" (admin-only) ones unlock with a single permission prompt.
+"locked" (admin-only) ones unlock with a single permission prompt. The
+interface is available in **English and Russian** — switch anytime with the
+`EN`/`RU` buttons at the top.
 
 ![Windows 8+](https://img.shields.io/badge/Windows-8%2B-0078D6)
 ![.NET Framework 4.8](https://img.shields.io/badge/.NET%20Framework-4.8-512BD4)
 ![Version: 0.99 beta](https://img.shields.io/badge/version-0.99%20beta-purple)
-![UI: Russian](https://img.shields.io/badge/UI-Russian-blue)
+![UI: EN / RU](https://img.shields.io/badge/UI-EN%20%2F%20RU-blue)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
 ---
@@ -77,6 +79,7 @@ created it.
 - 📦 **Export / import** your whole menu as JSON.
 - 🔄 **Live auto-refresh** — the table updates the instant the registry changes, even from another program.
 - 🌙 **Dark theme by default** — classic WinForms has no native dark mode, so every control is custom-themed.
+- 🌍 **English and Russian** — switch anytime with the `EN`/`RU` buttons, no restart hunting required.
 - 🪶 **Single .exe, no installer** — .NET Framework 4.8, no external runtime to install on Windows 10/11.
 
 ## 🛠️ Install
@@ -176,10 +179,12 @@ Windows не даёт нормального способа отредактир
 расширения вроде 7-Zip — в одном месте и понятным языком, а не набором кодов.
 Можно добавлять свои пункты, редактировать или удалять чужие, а
 «заблокированные» (только для администратора) пункты разблокируются одним
-запросом прав.
+запросом прав. Интерфейс доступен на **английском и русском** — переключить
+можно в любой момент кнопками `EN`/`RU` вверху.
 
 ## Что внутри
 
+- Интерфейс на **английском и русском** — переключение кнопками `EN`/`RU`, без поиска настроек.
 - Полный контроль над меню рабочего стола / папок / файлов / «Отправить» / расширений — в одном приложении.
 - Показывает **всё реальное**: свои пункты, чужих программ и Windows — не только созданное этим инструментом.
 - **Права администратора для HKLM** запрашиваются один раз за сессию, а не на каждое действие.

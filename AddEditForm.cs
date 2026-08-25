@@ -41,8 +41,8 @@ namespace QuickLaunchMenuWinForms
 
             if (existingEntry != null)
             {
-                Text = "Изменить пункт меню";
-                _saveButton.Text = "Сохранить";
+                Text = Localization.T("Изменить пункт меню", "Edit menu entry");
+                _saveButton.Text = Localization.T("Сохранить", "Save");
                 _nameBox.Text = existingEntry.DisplayName;
                 _targetBox.Text = existingEntry.TargetPath;
                 _argumentsBox.Text = existingEntry.Arguments;
@@ -74,7 +74,7 @@ namespace QuickLaunchMenuWinForms
 
         private void BuildUi()
         {
-            Text = "Новый пункт меню";
+            Text = Localization.T("Новый пункт меню", "New menu entry");
             FormBorderStyle = FormBorderStyle.FixedDialog;
             StartPosition = FormStartPosition.CenterParent;
             MaximizeBox = false;
@@ -104,37 +104,38 @@ namespace QuickLaunchMenuWinForms
             layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             layout.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
 
-            AddLabel(layout, "Название в меню", 0, span: true);
+            AddLabel(layout, Localization.T("Название в меню", "Name in the menu"), 0, span: true);
             _nameBox = new TextBox { Dock = DockStyle.Fill };
             layout.Controls.Add(_nameBox, 0, 1);
             layout.SetColumnSpan(_nameBox, 2);
 
             var targetLabelText = _scope == MenuScope.Desktop
-                ? "Программа, файл или папка"
-                : "Программа, которая откроет " + (_scope == MenuScope.Folder ? "папку" : "файл");
+                ? Localization.T("Программа, файл или папка", "Program, file, or folder")
+                : Localization.T("Программа, которая откроет " + (_scope == MenuScope.Folder ? "папку" : "файл"),
+                    "Program that will open the " + (_scope == MenuScope.Folder ? "folder" : "file"));
             AddLabel(layout, targetLabelText, 0, 2, span: true);
             _targetBox = new TextBox { Dock = DockStyle.Fill };
-            var browseTargetButton = new Button { Text = "Обзор...", AutoSize = true };
+            var browseTargetButton = new Button { Text = Localization.T("Обзор...", "Browse..."), AutoSize = true };
             browseTargetButton.Click += (s, e) => BrowseTarget();
             layout.Controls.Add(_targetBox, 0, 3);
             layout.Controls.Add(browseTargetButton, 1, 3);
 
             var argumentsHint = _service.UsesClickedItemPlaceholder
-                ? "Аргументы (необязательно — путь к кликнутому объекту подставится сам)"
-                : "Аргументы командной строки (необязательно)";
+                ? Localization.T("Аргументы (необязательно — путь к кликнутому объекту подставится сам)", "Arguments (optional — the clicked item's path is filled in automatically)")
+                : Localization.T("Аргументы командной строки (необязательно)", "Command-line arguments (optional)");
             AddLabel(layout, argumentsHint, 0, 4, span: true);
             _argumentsBox = new TextBox { Dock = DockStyle.Fill };
             layout.Controls.Add(_argumentsBox, 0, 5);
             layout.SetColumnSpan(_argumentsBox, 2);
 
-            AddLabel(layout, "Своя иконка (необязательно)", 0, 6, span: true);
+            AddLabel(layout, Localization.T("Своя иконка (необязательно)", "Custom icon (optional)"), 0, 6, span: true);
             _iconBox = new TextBox { Dock = DockStyle.Fill };
-            var browseIconButton = new Button { Text = "Обзор...", AutoSize = true };
+            var browseIconButton = new Button { Text = Localization.T("Обзор...", "Browse..."), AutoSize = true };
             browseIconButton.Click += (s, e) => BrowseIcon();
             layout.Controls.Add(_iconBox, 0, 7);
             layout.Controls.Add(browseIconButton, 1, 7);
 
-            AddLabel(layout, "Группа/подменю (необязательно — оставь пустым для прямой ссылки)", 0, 8, span: true);
+            AddLabel(layout, Localization.T("Группа/подменю (необязательно — оставь пустым для прямой ссылки)", "Group/submenu (optional — leave blank for a direct link)"), 0, 8, span: true);
             _groupBox = new ComboBox { Dock = DockStyle.Fill, DropDownStyle = ComboBoxStyle.DropDown };
             layout.Controls.Add(_groupBox, 0, 9);
             layout.SetColumnSpan(_groupBox, 2);
@@ -147,8 +148,8 @@ namespace QuickLaunchMenuWinForms
                 Padding = new Padding(0, 8, 0, 0)
             };
 
-            _saveButton = new Button { Text = "Добавить", AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
-            var cancelButton = new Button { Text = "Отмена", AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
+            _saveButton = new Button { Text = Localization.T("Добавить", "Add"), AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
+            var cancelButton = new Button { Text = Localization.T("Отмена", "Cancel"), AutoSize = true, Padding = new Padding(8, 4, 8, 4) };
 
             _saveButton.Click += (s, e) => Save();
             cancelButton.Click += (s, e) => { DialogResult = DialogResult.Cancel; Close(); };
@@ -195,7 +196,7 @@ namespace QuickLaunchMenuWinForms
         {
             using (var dialog = new OpenFileDialog
             {
-                Filter = "Программы, ярлыки и файлы (*.exe;*.lnk;*.*)|*.exe;*.lnk;*.*",
+                Filter = Localization.T("Программы, ярлыки и файлы (*.exe;*.lnk;*.*)|*.exe;*.lnk;*.*", "Programs, shortcuts, and files (*.exe;*.lnk;*.*)|*.exe;*.lnk;*.*"),
                 CheckFileExists = true
             })
             {
@@ -214,7 +215,7 @@ namespace QuickLaunchMenuWinForms
         {
             using (var dialog = new OpenFileDialog
             {
-                Filter = "Иконки и программы (*.ico;*.exe;*.dll)|*.ico;*.exe;*.dll|Все файлы (*.*)|*.*",
+                Filter = Localization.T("Иконки и программы (*.ico;*.exe;*.dll)|*.ico;*.exe;*.dll|Все файлы (*.*)|*.*", "Icons and programs (*.ico;*.exe;*.dll)|*.ico;*.exe;*.dll|All files (*.*)|*.*"),
                 CheckFileExists = true
             })
             {
@@ -233,22 +234,22 @@ namespace QuickLaunchMenuWinForms
 
             if (string.IsNullOrWhiteSpace(name))
             {
-                MessageBox.Show(this, "Укажи название пункта меню.", "Проверь данные",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(this, Localization.T("Укажи название пункта меню.", "Enter a name for the menu entry."),
+                    Localization.T("Проверь данные", "Check the details"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(target))
             {
-                MessageBox.Show(this, "Укажи программу, файл или папку для запуска.", "Проверь данные",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(this, Localization.T("Укажи программу, файл или папку для запуска.", "Enter a program, file, or folder to launch."),
+                    Localization.T("Проверь данные", "Check the details"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (Path.IsPathRooted(target) && !File.Exists(target) && !Directory.Exists(target))
             {
-                MessageBox.Show(this, "Указанный путь не найден. Проверь его или используй кнопку «Обзор...».",
-                    "Проверь данные", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(this, Localization.T("Указанный путь не найден. Проверь его или используй кнопку «Обзор...».", "That path wasn't found. Check it or use the \"Browse...\" button."),
+                    Localization.T("Проверь данные", "Check the details"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -269,8 +270,10 @@ namespace QuickLaunchMenuWinForms
             if ((isRenameOrMove || isNewCollision) && _service.KeyNameExists(newKeyName, newGroup))
             {
                 var result = MessageBox.Show(this,
-                    $"Пункт с названием «{name}» уже есть {(newGroup == null ? "среди прямых ссылок" : $"в группе «{newGroup}»")}. Заменить его?",
-                    "Пункт уже существует", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    Localization.T(
+                        $"Пункт с названием «{name}» уже есть {(newGroup == null ? "среди прямых ссылок" : $"в группе «{newGroup}»")}. Заменить его?",
+                        $"An entry named \"{name}\" already exists {(newGroup == null ? "among the direct links" : $"in the group \"{newGroup}\"")}. Replace it?"),
+                    Localization.T("Пункт уже существует", "Entry already exists"), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result != DialogResult.Yes)
                 {
                     return;
@@ -290,8 +293,8 @@ namespace QuickLaunchMenuWinForms
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, $"Не удалось сохранить пункт меню.\n\n{ex.Message}", "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, Localization.T($"Не удалось сохранить пункт меню.\n\n{ex.Message}", $"Couldn't save the menu entry.\n\n{ex.Message}"),
+                    Localization.T("Ошибка", "Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -305,10 +308,14 @@ namespace QuickLaunchMenuWinForms
         private async System.Threading.Tasks.Task SaveProtectedAsync(string name, string target, string arguments, string icon)
         {
             var confirm = MessageBox.Show(this,
-                "Это пункт из HKEY_LOCAL_MACHINE (для всех пользователей компьютера) — не обязательно часть " +
-                "Windows, так делают инсталляторы многих обычных программ. Изменение потребует прав " +
-                "администратора. Продолжить?",
-                "Нужны права администратора", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                Localization.T(
+                    "Это пункт из HKEY_LOCAL_MACHINE (для всех пользователей компьютера) — не обязательно часть " +
+                    "Windows, так делают инсталляторы многих обычных программ. Изменение потребует прав " +
+                    "администратора. Продолжить?",
+                    "This entry is from HKEY_LOCAL_MACHINE (for every user of the machine) — that doesn't " +
+                    "necessarily mean it's part of Windows, many ordinary installers do this. Changing it will " +
+                    "need administrator rights. Continue?"),
+                Localization.T("Нужны права администратора", "Administrator rights needed"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (confirm != DialogResult.Yes) return;
 
             var writes = _service.BuildProtectedLinkUpdate(_existingNode!, name, target, arguments,
@@ -321,8 +328,10 @@ namespace QuickLaunchMenuWinForms
 
             if (!ok)
             {
-                MessageBox.Show(this, "Не удалось получить права администратора (запрос отклонён или произошла ошибка).",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(this,
+                    Localization.T("Не удалось получить права администратора (запрос отклонён или произошла ошибка).",
+                        "Couldn't get administrator rights (the request was declined or something went wrong)."),
+                    Localization.T("Ошибка", "Error"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -338,7 +347,7 @@ namespace QuickLaunchMenuWinForms
                 {
                     using (var key = Registry.LocalMachine.CreateSubKey(write.Path, writable: true))
                     {
-                        if (key == null) throw new UnauthorizedAccessException("Нет доступа на запись в HKEY_LOCAL_MACHINE.");
+                        if (key == null) throw new UnauthorizedAccessException(Localization.T("Нет доступа на запись в HKEY_LOCAL_MACHINE.", "No write access to HKEY_LOCAL_MACHINE."));
                         key.SetValue(write.Name, write.Value);
                     }
                 }
